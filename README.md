@@ -34,13 +34,13 @@ Then, once done, I will backup everything to MEGA to have an online and encrypte
 
 ### Folders Structure
 
-I will have a 3TB HDD connected to my Raspberry Pi where I will be syncing all my photos. This HDD is automatically mounted on the `/data/3TB` folder on boot. To do so, connect your Storage device on the RPI and run the following command:
+I will have a 3TB HDD connected to my Raspberry Pi where I will be syncing all my photos. This HDD is automatically mounted on my `/data/3TB` folder on boot. To do so, connect your Storage device on the RPI and run the following command:
 
 `sudo blkid`
 
 You should get a list where you should find your storage device listed:
 
-```shell
+```
 /dev/sdb1: LABEL="3TB" UUID="16955984-34c8-435d-b646-6578a3bab016" TYPE="ext4" PARTUUID="ba10c453-2297-5f49-9886-fd76517576cd"
 ```
 
@@ -48,7 +48,9 @@ You will need to copy the UUID label. Then edit the fstab:
 
 `sudo nano /etc/fstab`
 
-`UUID=16955984-34c8-435d-b646-6578a3bab016 /data/3Tera auto nosuid,nodev,nofail 0 0`
+```
+UUID=16955984-34c8-435d-b646-6578a3bab016 /data/3Tera auto nosuid,nodev,nofail 0 0
+```
 
 Use this line with the UUID you just copied and the mountpoint you want for your device and save it. Now your External storage will be mounted on boot.
 
