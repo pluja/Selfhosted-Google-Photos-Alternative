@@ -5,6 +5,7 @@ To replace google photos I will be using a combination of Programs and scripts t
 These technologies will be:
 
 - PiGallery2 - A simple and lightweight gallery with all you expect. Read only.
+  - You can also use PhotoView for more advanced functionalities like Face Recognition.
   
 - Syncthing - A simple, fast, peer-to-peer syncing tool.
   
