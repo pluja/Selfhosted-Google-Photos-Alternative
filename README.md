@@ -5,7 +5,6 @@ To replace google photos I will be using a combination of Programs and scripts t
 These technologies will be:
 
 - PiGallery2 - A simple and lightweight gallery with all you expect. Read only.
-  - You can instead use PhotoView for more advanced functionalities like Face Recognition.
   
 - Syncthing - A simple, fast, peer-to-peer syncing tool.
   
@@ -34,13 +33,13 @@ Then, once done, I will backup everything to MEGA to have an online and encrypte
 
 ### Folders Structure
 
-I will have a 3TB HDD connected to my Raspberry Pi where I will be syncing all my photos. This HDD is automatically mounted on my `/data/3TB` folder on boot. To do so, connect your Storage device on the RPI and run the following command:
+I will have a 3TB HDD connected to my Raspberry Pi where I will be syncing all my photos. This HDD is automatically mounted on the `/data/3TB` folder on boot. To do so, connect your Storage device on the RPI and run the following command:
 
 `sudo blkid`
 
 You should get a list where you should find your storage device listed:
 
-```
+```shell
 /dev/sdb1: LABEL="3TB" UUID="16955984-34c8-435d-b646-6578a3bab016" TYPE="ext4" PARTUUID="ba10c453-2297-5f49-9886-fd76517576cd"
 ```
 
@@ -48,9 +47,7 @@ You will need to copy the UUID label. Then edit the fstab:
 
 `sudo nano /etc/fstab`
 
-```
-UUID=16955984-34c8-435d-b646-6578a3bab016 /data/3Tera auto nosuid,nodev,nofail 0 0
-```
+`UUID=16955984-34c8-435d-b646-6578a3bab016 /data/3Tera auto nosuid,nodev,nofail 0 0`
 
 Use this line with the UUID you just copied and the mountpoint you want for your device and save it. Now your External storage will be mounted on boot.
 
@@ -134,3 +131,7 @@ fi
 ```
 
 You can come up with a better script, if you do don't doubt opening an issue and I will replace it. As I am lazy, and for my setup this is OK I won't be thinking a better syntax for this.
+
+This script lets us have imports from both the Computer and the Phone in separate folders to avoid conflicts and strange synchronization issues. You might be able to use a unique folder on the server but I prefer using it this way.
+
+We need to create a cronjob to run this script every hour (for example) to check if there are new imports, if there are we will sort them and move them to our Gallery and then remove any duplicates.
