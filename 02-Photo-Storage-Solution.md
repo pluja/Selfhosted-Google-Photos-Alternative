@@ -191,9 +191,7 @@ We need to create a cronjob to run this script every hour (for example) to check
 And paste this (change the IMPORT.sh script path) for running the IMPORT script every 30 minutes:
 
 ```*/30 * * * * ./home/pi/IMPORT.sh```
-*/30 * * * * ./home/pi/IMPORT.sh
 
-```
 ### Remote Folder on local machine: Using Digikam for Metadata completion and Face Recognition
 
 You can mount the remote Gallery folder on your local machine so you can work with it. To do it you can make use of `SSH FILESYSTEM` which allows you to mount a remote filesystem to your machine and use it as if it was a regular folder.
