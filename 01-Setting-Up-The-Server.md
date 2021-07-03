@@ -133,3 +133,6 @@ PermitRootLogin no
 
 Once done, restart the ssh service:
 `sudo systemctl reload ssh`
+
+And finally, install a basic firewall protection:
+`sudo apt install fail2ban`
