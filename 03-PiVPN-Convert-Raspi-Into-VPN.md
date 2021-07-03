@@ -20,3 +20,15 @@ Your configuration should look like somtething like this:
 | Name | Type | Port Start | Port End | NAT interface | Private IP | Private Port |
 | --- | --- | --- | --- | --- | --- | --- |
 | Wireguard | Port-Range | 51820 | 51820 | TPC or UDP (Both) | eth0.vxxx | 192.168.1.223 |
+
+## Add a new device
+
+To add a new device is quite easy, just run `pivpn add` on your PiVPN server, give it a name, and you are good to go.
+
+## Connect to PiVPN
+
+Once you have created your PiVPN client profile (using `pivpn add`) you can connect form various devices.
+
+Install the Wireguard client on your machine (Android app, iOS app, Linux CLI client, etc). If you are on a desktop machine, import your configuration following [the PiVPN guide](https://github.com/pivpn/pivpn/wiki/WireGuard#importing-profiles-on-client-machines), which should be pretty easy.
+
+If you are on Android or iOS you can just run `pivpn -qr`, then select the client profile and scan the QR code from the Wireguard app. That's it, connected!
