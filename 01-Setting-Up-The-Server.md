@@ -7,7 +7,7 @@ Download Ubuntu Server image or Raspbian for Raspberry Pi. It is recommended to 
 
 Raspbian is more lightweight and more suitable for Raspberry.
 
-Burn the image on the SD card using **Balena Etcher** (or Rufus).
+Burn the image on the SD card using [**Balena Etcher**](https://www.balena.io/etcher/) (or [Rufus](https://rufus.ie/en_US/)).
 
 Start the RPI with the SD and login using the default credentials for Ubuntu Server:
 
