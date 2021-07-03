@@ -1,1 +1,221 @@
 
+# Replacing Google Photos
+
+After testing a lot (almost all of them) of alternatives and solutions. Finally I came up with the definitive solution, the one that gives me everything I want in an easy (once set up is done), cheap, secure and lightweight way.
+
+At the end of this tutorial we will have a Photo Storage solution that will allow us to:
+
+- [x] Sync our photos from any device.
+  
+- [x] Remove exact-photo duplicates efficiently.
+  
+- [x] Automatically organize our Gallery by Year and Month.
+  
+- [x] Manually run Face Recognition and Face Scanning.
+  
+- [x] Manage our gallery from DigiKam.
+  
+- [x] Have an online gallery with a map, faces, tags, ratings and other filters.
+  
+
+- [x] Upload an encrypted backup of our gallery to any cloud service.
+  
+- [x] Locally generate a backup on a separated drive.
+  
+- [x] Securelly access our Gallery from anywhere outside our network.
+  
+
+This can be achieved using a Raspberry Pi 4 and a HDD Storage drive. Pretty cheap!
+
+To replace google photos I will be using a combination of programs and scripts that will end by giving me the very same functionallity I got when I was using Google Photos.
+
+These technologies will be:
+
+- [PiGallery2](https://github.com/bpatrik/pigallery2) - A simple and lightweight gallery with all that you expect. Read only.
+  
+  - You can also use [PhotoView](https://github.com/photoview/photoview) instead if you want to be able to do the Face Recognition on the Raspberry itself. I personally prefer not to carry this workload on the RPI.
+- [Syncthing](https://syncthing.net/) - A simple, fast, peer-to-peer syncing tool.
+  
+- [Phockup](https://github.com/ivandokov/phockup) - Script to organize your Photos.
+  
+- [Czkawka](https://github.com/qarmin/czkawka) - Find duplicates for your photos really fast.
+  
+- MEGA - Cloud storage.
+  
+- [SSHFS](https://github.com/libfuse/sshfs) - Manage remote Gallery folder locally.
+  
+- [DigiKam](https://www.digikam.org/) - Face Recognition and Metadata management.
+  
+
+I will be synching my Phone photos using Syncthing to my Raspberry Pi 4 server. There I will run a serires of scripts to help me organize the photos by Year and Month. Then I will make use of DigiKam locally to have the ability to run Face tagging and recogntion along with metadata tweaking.
+
+Then, once done, I will encrypt and backup everything to MEGA using rsync so I have an online and encrypted backup of everything. I will also keep a local copy of everything on a separate HDD that will automatically turn on at night-time. Let's go.
+
+## Preparation
+
+### Installing Dependencies
+
+First we will install the dependencies that are needed for everything to work.
+
+#### Rust:
+
+Rust is a secure compiled programming language which allows for very efficient applications. We will use it for deleting exact-image duplicates on our Gallery.
+
+```bash
+sudo apt install build-essential
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+```
+
+#### PiGallery2
+
+This will be the app we will be using to display our Gallery folder. Installing PiGallery2 on our Raspberry is pretty easy, you just need to follow the [app instructions on their README.md](https://github.com/bpatrik/pigallery2#11-install-and-run-with-docker-recommended). I really recommend using Docker-Compose.
+
+### Folder Structure
+
+I will have a 3TB HDD connected to my Raspberry Pi where I will be synching all my photos. This HDD is automatically mounted on the `/data/3TB` folder on boot. To do this automation, connect your Storage device on the RPI and run the following command:
+
+`sudo blkid`
+
+You will get a list where you should find your storage device listed:
+
+```shell
+/dev/sdb1: LABEL="3TB" UUID="16955984-34c8-435d-b646-6578a3bab016" TYPE="ext4" PARTUUID="ba10c453-2297-5f49-9886-fd76517576cd"
+```
+
+You will need to copy the **UUID** label. Then edit the fstab:
+
+- `sudo nano /etc/fstab`
+
+And add the following line usign the UUID and mountpoint for your drive and system:
+
+`UUID=16955984-34c8-435d-b646-6578a3bab016 /data/3Tera auto nosuid,nodev,nofail 0 0`
+
+Save it. Now your External storage will be mounted on boot.
+
+Inside my 3TB storage I have a folder called Photos, just for organization. You can skip this folder if you don't think it is useful. I created it because i may be using the storage for other kinds of media like Music or Films.
+
+Now, inside this folder I have the `tmp` folder for pigallery2 and the `images` folder. Inside images I have two more folders the first one is `Imports` which contains two more folders: `Phone` and `PC`. Here is where all the images will be uploaded from my devices without any kind of Sorting or deduplication. Then I have the `Gallery` folder, here is where all my photos will be kept sorted and perfectly ordered.
+
+The folder structure insidte the 3 TB drive looks like this:
+
+```
+Photos/
+├── tmp/
+└── images/
+    ├── Imports/
+    │   ├── Phone/
+    │   └── PC/
+    └── Gallery/
+```
+
+#### Syncthing Folders
+
+##### Phone Camera
+
+- *SERVER* Destination Folder: /data/images/Imports/Phone
+  
+- *PHONE* Source Folder: /camera
+  
+
+The *PHONE* folder will be of type **Send-Only** and the *SERVER* folder will be **Recieve-Only.**
+
+It is also very important that we set the **IgnoreDelete** setting to **True** on the server for our Phone folder so we can free up space on the Phone by deleting the photos without them getting delete on the server too. This can be done from the **Syncthing Advanced Folders settings** (not folder advanced settings!).
+
+##### Computer Folder
+
+If we have enough space on our computer, we can save a copy of the **Sorted** folder we will have on our Server so we can move and create new Folders and Albums. We can use **Digikam** from the computer in order to organize all the photos locally and then propagate these changes to the server using Syncthing.
+
+*SERVER*: /data/images/Gallery
+
+*COMPUTER*: /Pictures/Gallery
+
+We will set both folders as Send-Recieve, we may want to have the "IgnoreDelete" form the PC to the Server just in case, but this is optional.
+
+---
+
+Now we have our Syncronization method set up. It was quite easy, we will have our photos from our Phone synced to our server in a matter of minutes and in a peer-to-peer way. How nice and how private!
+
+## The Scripts
+
+Now we will work on different scripts. The IMPORT script, that will handle the sorting, de-duplication and deletion of files and the BACKUP that, as the name already clarifies, will handle the cloud-backup of our photos to any cloud-provider of our choice.
+
+Let's go. I want to have my photos sorted by Year/MM-Month folder structure (eg. 2021/01-January) automatically. This will let me have a very organized gallery from the very beggining. To do this I will be using a very nice script called [Phockup](https://github.com/ivandokov/phockup). This scripts allows us to do exactly what we want to do. To install it we will use the following commands on our server:
+
+```bash
+sudo apt-get install python3 libimage-exiftool-perl -y
+curl -L https://github.com/ivandokov/phockup/archive/latest.tar.gz -o phockup.tar.gz
+tar -zxf phockup.tar.gz
+sudo mv phockup-* /opt/phockup
+sudo ln -s /opt/phockup/phockup.py /usr/local/bin/phockup
+```
+
+Now we have installed Phockup. The command I will be using to Sort my folder will be the following:
+
+`phockup /source/folder /destination/folder --move --date YYYY/MM-M --date-field=FileModifyDate`
+
+This command will take the contents of the source folder and **move** them to the destination folder. If you want to keep a copy of the original uploaded files without being sorted, you can remove the `--move` flag. The `--date YYYY/MM-M` specifies the folder structure we want in this case YEAR/XX-Month. we also have an additional flag called `date-field` that specifies the date field from exiftool that needs to be taken if there is no date specified.
+
+Now we need to install Czkawka in order to achieve the de-duplication of exact same images, videos, etc. To do this we will need to have previously correctly installed Rust and be able to make use of the **cargo** command. Once done, we will:
+
+```bash
+git clone https://github.com/qarmin/czkawka.git
+cd czkawka
+cargo run --release --bin czkawka_cli
+```
+
+This will compile Czkawka CLI version so we can use it.
+
+The script for the Import of the files will be the following:
+
+```bash
+#!/bin/bash
+sourceFolder="/data/3Tera/photos/Imports"
+sortedFolder="/data/3Tera/photos/Gallery"
+if [ `ls $sourceFolder/Phone $sourceFolder/PC | wc -l` -gt 0 ]
+then
+        phockup $sourceFolder $sortedFolder --move --date YYYY/MM-M --date-field=FileModifyDate
+        ~/czkawka/target/release/czkawka_cli dup -d $sortedFolder -x IMAGE VIDEO -s hashmb -f results-dup.txt --delete-method AEO
+fi
+```
+
+I am sure you can come up with a better script, if you do don't doubt opening an issue and I will replace it. As I am lazy, and for my setup this is OK I won't be thinking for a better syntax for this. Maybe you could just
+
+This script lets us have imports from both the Computer and the Phone in separate folders to avoid conflicts and strange synchronization issues. You might be able to use a unique folder on the server but I prefer using it this way.
+
+It checks if the Imports directory is empty. If not, then it does the import. If is empty it does nothing.
+
+We need to create a cronjob to run this script every hour (for example) to check if there are new imports, if there are we will sort them and move them to our Gallery and then remove any duplicates. To do this open your crontab with
+
+- `crontab -e`
+
+And paste this (change the IMPORT.sh script path) for running the IMPORT script every 30 minutes:
+
+```*/30 * * * * ./home/pi/IMPORT.sh```
+*/30 * * * * ./home/pi/IMPORT.sh
+
+```
+### Remote Folder on local machine: Using Digikam for Metadata completion and Face Recognition
+
+You can mount the remote Gallery folder on your local machine so you can work with it. To do it you can make use of `SSH FILESYSTEM` which allows you to mount a remote filesystem to your machine and use it as if it was a regular folder.
+
+This will also allow us to set up DigiKam wiht this mounted folder as a Local Collection and then, for example, scan the collection for faces. Using this method we can keep our Raspberry free of the heavy-workload that face recoginition means and derive this work on our local machine. The only drawback is that we will need to manually run the face recognition from DigiKam.
+
+If you have a **large collection** of photos, I recommend you to get your photos on an SSD on your local machine and scan your collection for faces from there. Once scanned, tagged and written to the metadata upload them to the raspberry pi (or use that same SSD there) as this will make the process much faster.
+
+For me, I started a new gallery from the ground up this year. My old (2TB) photos are kept in an old HDD but I don't need them on my daily gallery for now.
+
+I scanned over 1000 full-quality photos from `sshfs` on the folder mounted on the RPI 3TB HDD in about 25 minutes. I assume that this same process on a local SSD would have taken half the time.
+
+If you want to set the Face Tags and other useful metadata (or edit metada), or just edit the remote Gallery from your desktop computer  You need to install `sshfs`:
+
+* `sudo apt install sshfs`
+
+And then mount the remote folder to a local folder like this:
+
+* `sshfs pi@192.168.1.222:/data/3Tera/images/Gallery /home/pluja/Pictures/PiGallery -o idmap=user -o ui  
+  d=1000 -o gid=1000`
+
+If you want to unmount the folder, you can use:
+
+- `fusermount -u /home/pluja/Pictures/PiGallery`
+```
