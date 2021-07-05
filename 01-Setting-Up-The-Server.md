@@ -36,9 +36,9 @@ Now update all packages wiht:
 Now let's configure the static IP for the `eth0` port.
 
 For this we will need to edit the `/etc/dhcpcd.conf` file:
-`sudo nano /etc/dhcpcd.conf`
+- `sudo nano /etc/dhcpcd.conf`
 
-And add the following lines:
+Add the following lines at the end of the file:
 
 ```
 interface eth0
