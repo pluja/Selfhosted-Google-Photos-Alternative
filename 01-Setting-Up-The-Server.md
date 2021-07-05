@@ -9,10 +9,10 @@ Raspbian is more lightweight and more suitable for Raspberry.
 
 Burn the image on the SD card using [**Balena Etcher**](https://www.balena.io/etcher/) (or [Rufus](https://rufus.ie/en_US/)).
 
-Start the RPI with the SD and login using the default credentials for Ubuntu Server:
+Start the RPI with the SD and login using the default credentials for your server:
 
-- User: `ubuntu` Password: `ubuntu` if we are on Ubuntu Server.
-- User: `pi` Password: `raspberry` if we are on Raspbian
+- User: `ubuntu` Password: `ubuntu` if we are on **Ubuntu Server**.
+- User: `pi` Password: `raspberry` if we are on **Raspbian**.
 
 Once logged in, change the password. It should automatically ask you to change it. If not, use `passwd` to change it.
 
