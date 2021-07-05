@@ -74,6 +74,18 @@ curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 
 ### Syncthing
 
+On your raspberry server run:
+
+- `sudo apt install syncthing`
+
+Now you have installed syncthing. On a web browser on any computer on your network visit `192.168.1.222:8384` (if you changed the static IP for your server previously use the one you chose).
+
+[Install Syncthing on all the devices you want to connect](https://syncthing.net/downloads/)
+
+It is important that you read [this 'Getting Started' page](https://docs.syncthing.net/intro/getting-started.html) if you have never used Syncthing before. Using this guide connect your devices (for example your Phone and your Raspberry server) and understand how all works. I also recommend to [read this page](https://docs.syncthing.net/intro/gui.html) to get introduced to Syncthing GUI. It is important that you understand how it works as you don't want to mess things up as you could end up losing your files somehow.
+
+In the following section we will configure the folder synchronization between hosts.
+
 #### Syncthing Folders
 
 As we have seen before, I will show you how I configured the above folder structure with syncthing so I can sync my photo sources (Phone and computer). If you have more sources you can just add more folders.
