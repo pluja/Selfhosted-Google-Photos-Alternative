@@ -28,7 +28,7 @@ Depending on what OS you chose, you can jump to:
 
 Now we will configure the internet connections for the RPI. We will be setting up the Wi-Fi connection with DHCP4 (will assign an IP dynamically, this is for the first updates and so) and then we will be configuring the Ethernet port with an static IP for when we set up the RPI-4 as a server.
 
-To setup the WiFi connection use `sudo raspi-config` and enter the SSID and Password to connect to your network. Once done, reboot the RPI.
+To setup the WiFi connection use `sudo raspi-config` and search through the menus for the WiFi configuration. There enter the SSID (network name) and Password to connect to your network. Once done, reboot the RPI.
 
 Now update all packages wiht:
 `sudo apt-get update && sudo apt-get upgrade`
