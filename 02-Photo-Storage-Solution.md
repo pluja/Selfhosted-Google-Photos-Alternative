@@ -82,7 +82,7 @@ Now you have installed syncthing. On a web browser on any computer on your netwo
 
 [Install Syncthing on all the devices you want to connect](https://syncthing.net/downloads/)
 
-It is important that you read [this 'Getting Started' page](https://docs.syncthing.net/intro/getting-started.html) if you have never used Syncthing before. Using this guide connect your devices (for example your Phone and your Raspberry server) and understand how all works. I also recommend to [read this page](https://docs.syncthing.net/intro/gui.html) to get introduced to Syncthing GUI. It is important that you understand how it works as you don't want to mess things up as you could end up losing your files somehow.
+It is important that you read [this 'Getting Started' page](https://docs.syncthing.net/intro/getting-started.html) if you have never used Syncthing before. Using this guide connect your devices (for example your Phone and your Raspberry server) and understand how all works. I also recommend you to [read this page](https://docs.syncthing.net/intro/gui.html) to get introduced to Syncthing GUI. It is important that you understand how it works as you don't want to mess things up as you could end up losing your files somehow.
 
 In the following section we will configure the folder synchronization between hosts.
 
