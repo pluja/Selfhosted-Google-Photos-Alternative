@@ -18,7 +18,7 @@ Once logged in, change the password. It should automatically ask you to change i
 
 ## Raspbian config
 
-> The `sudo raspi-config` command comes very handy for basic configuration. Use it to enable SSH server and change keyboard layot before proceding.
+> The `sudo raspi-config` command comes very handy for basic configuration. Use it to enable SSH server and change keyboard layout before proceding.
 
 Now we will configure the internet connections for the RPI. We will be setting up the Wi-Fi connection with DHCP4 (will assign an IP dynamically, this is for the first updates and so) and then we will be configuring the Ethernet port with an static IP for when we set up the RPI-4 as a server.
 
