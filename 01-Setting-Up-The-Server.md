@@ -26,7 +26,7 @@ Depending on what OS you chose, you can jump to:
 
 > The `sudo raspi-config` command comes very handy for basic configuration. Use it to enable SSH server and change keyboard layout before proceding.
 
-Now we will configure the internet connections for the RPI. We will be setting up the Wi-Fi connection with DHCP4 (will assign an IP dynamically, this is for the first updates and so) and then we will be configuring the Ethernet port with an static IP for when we set up the RPI-4 as a server.
+Now we will configure the internet connections for the RPI. We will be setting up the Wi-Fi connection with DHCP4 (will assign an IP dynamically, this is for the first updates and so) and then we will be configuring the Ethernet port with an static IP for when we set up the RPI as a server.
 
 To setup the WiFi connection use `sudo raspi-config` and search through the menus for the WiFi configuration. There enter the SSID (network name) and Password to connect to your network. Once done, reboot the RPI.
 
@@ -55,11 +55,11 @@ Now shutdown the RPI with `shutdown now` and connect the Ethernet cable. Once bo
 
 Once you have `ssh` to the RPI, you can proceed to secure the SSH configuration. To do so we will deactivate the password and root login for SSH for security.
 
-To generate a private+public key pair on *NIX systems, launch this command on the local machine (your workstation, not RPI-4):
+To generate a private+public key pair on *NIX systems, launch this command on the local machine (your workstation, not RPI):
 
 `ssh-keygen -t rsa`
 
-You can use the default folder destination for the keys. Then you will need to copy the generated keys to the remote machine (RPI-4):
+You can use the default folder destination for the keys. Then you will need to copy the generated keys to the remote machine (RPI):
 
 `ssh-copy-id -i $HOME/.ssh/id_rsa.pub pi@192.168.1.222`
 
