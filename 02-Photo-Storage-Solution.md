@@ -21,23 +21,6 @@ Then, once done, I will encrypt and backup everything to MEGA using `rclone` so 
 
 ## Preparation
 
-### Installing Dependencies
-
-First we will install the dependencies that are needed for everything to work.
-
-#### Rust:
-
-Rust is a secure compiled programming language which allows for very efficient applications. We will use it for deleting exact-image duplicates on our Gallery.
-
-```bash
-sudo apt install build-essential
-curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
-```
-
-#### PiGallery2
-
-This will be the app we will be using to display our Gallery folder. Installing PiGallery2 on our Raspberry is pretty easy, you just need to follow the [app instructions on their README.md](https://github.com/bpatrik/pigallery2#11-install-and-run-with-docker-recommended). I really recommend using Docker-Compose.
-
 ### Folder Structure
 
 I will have a 3TB HDD connected to my Raspberry Pi where I will be synching all my photos. This HDD is automatically mounted on the `/data/3TB` folder on boot. To do this automation, connect your Storage device on the RPI and run the following command:
@@ -76,18 +59,38 @@ Photos/
     └── Gallery/
 ```
 
+## Installing programs
+
+First we need to install the main programs that are needed for everything to work.
+
+### Rust:
+
+Rust is a secure compiled programming language which allows for very efficient applications. We will use it for deleting exact-image duplicates on our Gallery.
+
+```bash
+sudo apt install build-essential
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+```
+
+### Syncthing
+
 #### Syncthing Folders
+
+As we have seen before, I will show you how I configured the above folder structure with syncthing so I can sync my photo sources (Phone and computer). If you have more sources you can just add more folders.
 
 ##### Phone Camera
 
+This folder must sync one way. I want to be able to delete the photos from my phone without losing them on my server too. This is why we will set up IgnoreDelete and Send-Only folders.
+
 - *SERVER* Destination Folder: /data/images/Imports/Phone
   
-- *PHONE* Source Folder: /camera
+- *PHONE* Source Folder: /DCIM/Camera
   
 
 The *PHONE* folder will be of type **Send-Only** and the *SERVER* folder will be **Recieve-Only.**
 
-It is also very important that we set the **IgnoreDelete** setting to **True** on the server for our Phone folder so we can free up space on the Phone by deleting the photos without them getting delete on the server too. This can be done from the **Syncthing Advanced Folders settings** (not folder advanced settings!).
+It is also very important that we set the **IgnoreDelete** setting to **True** on the server for our Phone folder so we can free up space on the Phone by deleting the photos without them getting delete on the server too. This can be done from the **Syncthing Advanced Folders settings** (See the following image to find out where this option resides):
+![](https://i.imgur.com/Bv5eD4B.png)
 
 ##### Computer Folder
 
@@ -98,6 +101,10 @@ If we have enough space on our computer, we can save a copy of the **Sorted** fo
 *COMPUTER*: /Pictures/Gallery
 
 We will set both folders as Send-Recieve, we may want to have the "IgnoreDelete" form the PC to the Server just in case, but this is optional.
+
+### PiGallery2
+
+This will be the app we will be using to display our Gallery folder. Installing PiGallery2 on our Raspberry is pretty easy, you just need to follow the [app instructions on their README.md](https://github.com/bpatrik/pigallery2/blob/master/docker/README.md). I really recommend using Docker-Compose.
 
 ---
 
