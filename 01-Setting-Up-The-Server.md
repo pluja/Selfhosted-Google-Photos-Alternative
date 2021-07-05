@@ -47,7 +47,7 @@ static routers=192.168.1.1
 static domain_name_servers=192.168.1.1 9.9.9.9
 ```
 
-This way we are assigning the static ip `192.168.1.222` to the raspberry pi `Eth0` port. Also we are using `9.9.9.9` DNS provider (Quad9).
+This way we are assigning the static ip `192.168.1.222` to the raspberry pi `Eth0` port. Also we are using `9.9.9.9` DNS provider (Quad9). You can change this to suit your needs.
 
 Now shutdown the RPI with `shutdown now` and connect the Ethernet cable. Once booted, try to ssh to the RPI-4 with the assigned IP:
 `ssh pi@192.168.1.222`
