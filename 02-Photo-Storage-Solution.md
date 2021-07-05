@@ -1,4 +1,3 @@
-
 # Replacing Google Photos
 
 After testing a lot (almost all of them) of alternatives and solutions. Finally I came up with the definitive solution, the one that gives me everything I want in an easy (once set up is done), cheap, secure and lightweight way.
@@ -45,6 +44,8 @@ These technologies will be:
 - [SSHFS](https://github.com/libfuse/sshfs) - Manage remote Gallery folder locally.
   
 - [DigiKam](https://www.digikam.org/) - Face Recognition and Metadata management.
+  
+- Brotli - Super Fast and efficient compression tool.
   
 
 I will be synching my Phone photos using Syncthing to my Raspberry Pi 4 server. There I will run a serires of scripts to help me organize the photos by Year and Month. Then I will make use of DigiKam locally to have the ability to run Face tagging and recogntion along with metadata tweaking.
@@ -188,9 +189,13 @@ We need to create a cronjob to run this script every hour (for example) to check
 
 - `crontab -e`
 
-And paste this (change the IMPORT.sh script path) for running the IMPORT script every 30 minutes:
+And paste this (change the IMPORT.sh script path) for running the IMPORT script every 15 minutes.
 
-```*/30 * * * * ./home/pi/IMPORT.sh```
+```
+*/15 * * * * /home/pi/IMPORT.sh
+```
+
+I run it every 15 minutes as I don't take too much photos along a day (I take ~10 photos a day). If you take a lot of photos you may want to do it more regularly. Or if you are not interested on having your photos in your gallery almost instantly, you can just do it once a day, for example overnight.
 
 ### Remote Folder on local machine: Using Digikam for Metadata completion and Face Recognition
 
@@ -204,16 +209,54 @@ For me, I started a new gallery from the ground up this year. My old (2TB) photo
 
 I scanned over 1000 full-quality photos from `sshfs` on the folder mounted on the RPI 3TB HDD in about 25 minutes. I assume that this same process on a local SSD would have taken half the time.
 
-If you want to set the Face Tags and other useful metadata (or edit metada), or just edit the remote Gallery from your desktop computer  You need to install `sshfs`:
+If you want to set the Face Tags and other useful metadata (or edit metada), or just edit the remote Gallery from your desktop computer You need to install `sshfs`:
 
-* `sudo apt install sshfs`
+- `sudo apt install sshfs`
 
 And then mount the remote folder to a local folder like this:
 
-* `sshfs pi@192.168.1.222:/data/3Tera/images/Gallery /home/pluja/Pictures/PiGallery -o idmap=user -o ui  
-  d=1000 -o gid=1000`
+- `sshfs pi@192.168.1.222:/data/3Tera/images/Gallery /home/pluja/Pictures/PiGallery -o idmap=user -o ui d=1000 -o gid=1000`
+
+You can [Download DigiKam AppImage](https://www.digikam.org/download/). DigiKam is an awesome photo management tool. You can do many things there like creating albums or editing metadata, but the most interesting one is the face detection and recognition. Using this you can scan your gallery for faces. You will be able to tag some faces and once done, you can recognize them based on the already tagged faces:
+
+![](https://i.imgur.com/8hqpRlE.jpeg)
+
+Now go to **Settings > Configure DigiKam** and navigate to the **Metadata** section. In the first section on the **Behaviour** tab called "Write this information to the Metadata" select the information you want. If you are tagging faces, select the **Face Tags** so this information is written to the files.
+
+After you have tagged the faces, select a face (for example "Albert Einstein" in the photo) and now you can go to **Album > Write Metadata To Files** to write face Metadata to the files so PiGallery2 can read it.
 
 If you want to unmount the folder, you can use:
 
 - `fusermount -u /home/pluja/Pictures/PiGallery`
+
+## Backing up everything
+
+I want to backup everything and have several copies for all. I want a local copy on a separate HDD which will automatically turn on at night with a timer switch and an additional encrypted copy to be uploaded to a Cloud service like MEGA.
+
+For now, I will just use the local backup and in the near future I will update this file with how to backup to a cloud service. For the cloud backups you can use **rclone** (the tool I will use in the future tutorial), you can investigate about it. In a few words, is just like **rsync** but for cloud services.
+
+### Local Backup
+
+I will be using a very simple yet efficient method for backing everything up. I won't do any compression or packing of files. I will just sync the folders using `rsync`. This command lets you have incremental copies for a folder to a remote host (or locally). As I have a second Raspberry Pi, I will be backing up to a HDD connected to my second server for increased backup security.
+
+The `rsync` command reads a source folder and only writes the differences to the destination folder. The first time it will copy everything, so if you have a big gallery it will take a considerable ammount of time depending on if you are using an HDD or SSD or if you are copying to a remote host. But after that first upload, every backup will only upload the files that have changed or that are new. So it will be much more efficient and fast than copying the whole folder every time.
+
+Here is the BACKUP.sh file:
+
+```bash
+#!/bin/bash
+sourceFolder = /data/3Tera/pigallery2/images/Gallery
+destinationFolder = pi@192.168.1.223:/data/backup/backup/
+logPath = /data/3Tera
+(echo "------`date`------" && rsync -ai $sourceFolder $destinationFolder) &>> $backupPath/backup.log
 ```
+
+This will generate a `backup.log` file at the `logPath` destination. It will print the date of the backup and then thanks to the `-i` flag it will only write the newly backed up files. The `-a` flag will copy the Gallery folder structure as is and will keep all files properties among other things. You should definitely use the `-a` flag.
+
+As we said, after the first time, it will only backup the new and the changed images so for this reason you can make the backup more regularly. For example every 3 or 6 hours. Edit you crontab with `crontab -e` to suit your needs. I used the following syntax:
+
+```
+20 7-23/4 * * * /home/pi/BACKUP.sh
+```
+
+This will make a backup *at minute 30 past every 4th hour from 7 through 23*. I make it start at the 45th minute so it does not conflict with the IMPORT.sh script that takes place every 15 minutes.
