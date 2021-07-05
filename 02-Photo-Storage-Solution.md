@@ -45,7 +45,7 @@ These technologies will be:
   
 - [DigiKam](https://www.digikam.org/) - Face Recognition and Metadata management.
   
-- Brotli - Super Fast and efficient compression tool.
+- rsync - Efficient backup tool.
   
 
 I will be synching my Phone photos using Syncthing to my Raspberry Pi 4 server. There I will run a serires of scripts to help me organize the photos by Year and Month. Then I will make use of DigiKam locally to have the ability to run Face tagging and recogntion along with metadata tweaking.
