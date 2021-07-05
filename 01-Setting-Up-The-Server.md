@@ -50,22 +50,27 @@ static domain_name_servers=192.168.1.1 9.9.9.9
 This way we are assigning the static ip `192.168.1.222` to the raspberry pi `Eth0` port. Also we are using `9.9.9.9` DNS provider (Quad9). You can change this to suit your needs.
 
 Now shutdown the RPI with `shutdown now` and connect the Ethernet cable. Once booted, try to ssh to the RPI-4 with the assigned IP:
+
 `ssh pi@192.168.1.222`
 
 Once you have `ssh` to the RPI, you can proceed to secure the SSH configuration. To do so we will deactivate the password and root login for SSH for security.
 
 To generate a private+public key pair on *NIX systems, launch this command on the local machine (your workstation, not RPI-4):
+
 `ssh-keygen -t rsa`
 
 You can use the default folder destination for the keys. Then you will need to copy the generated keys to the remote machine (RPI-4):
+
 `ssh-copy-id -i $HOME/.ssh/id_rsa.pub pi@192.168.1.222`
 
 Now you can try to `ssh` again to the RPI and see that you are no longer prompted for a password:
+
 `ssh pi@192.168.1.222`
 
 > NOTE: make sure to backup your ssh keys (`$HOME/.ssh/` directory)
 
 Now we will edit the SSH config to make it more secure:
+
 `sudo nano /etc/ssh/sshd_config`
 
 You will need to find the following variables and set the values to the ones you can see here:
@@ -78,6 +83,7 @@ PermitRootLogin no
 ```
 
 Once done, restart the ssh service:
+
 `sudo systemctl reload ssh`
 
 ## Ubuntu config
@@ -116,16 +122,20 @@ Once done, apply this config with `sudo netplan apply`.
 
 Now we will configure SSH so we can control the RPI from another computer and we will also deactivate the password and root login for SSH for security.
 
-To generate a private+public key pair on *NIX systems, launch this command on the local machine (not RPI-4):
+To generate a private+public key pair on *NIX systems, launch this command on the local machine (not RPI):
+
 `ssh-keygen -t rsa`
 
-You can use the default folder destination for the keys. Then you will need to copy the generated keys to the remote machine (RPI-4):
+You can use the default folder destination for the keys. Then you will need to copy the generated keys to the remote machine (RPI):
+
 `ssh-copy-id -i $HOME/.ssh/id_rsa.pub ubuntu@192.168.1.221`
 
-Now you are ready to connect via SSH to the RPI-4:
+Now you are ready to connect via SSH to the RPI:
+
 `ssh ubuntu@192.168.1.221`
 
 Now we will edit the SSH config to make it more secure:
+
 `sudo vim /etc/ssh/sshd_config`
 
 You will need to find the following variables and set the values to the ones you can see here:
@@ -138,7 +148,11 @@ PermitRootLogin no
 ```
 
 Once done, restart the ssh service:
+
 `sudo systemctl reload ssh`
 
 And finally, install a basic firewall protection:
+
 `sudo apt install fail2ban`
+
+You are done with setting up your server. Now you can proceed to the second step of the guide.
