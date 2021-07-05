@@ -1,5 +1,5 @@
-# Self-Hosted Photo Storage Solution
-## Replacing Google Photos
+## <p align="center"> Replacing Google Photos </p>
+# <p align="center"> Self-Hosted Photo Storage Solution </p>
 After testing a lot (almost all of them) of alternatives and solutions. Finally I came up with the definitive solution, the one that gives me everything I want in an easy (once set up is done), cheap, secure and lightweight way.
 
 At the end of this tutorial we will have a Photo Storage solution that will allow us to:
