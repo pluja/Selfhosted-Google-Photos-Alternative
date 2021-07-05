@@ -74,6 +74,9 @@ curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 
 ### Syncthing
 
+Syncthing is a very powerful open-source synchronization tool:
+> Syncthing is a continuous file synchronization program. It synchronizes files between two or more computers in real time, safely protected from prying eyes. Your data is your data alone and you deserve to choose where it is stored, whether it is shared with some third party, and how it's transmitted over the internet. - From [Syncthing.net](https://syncthing.net)
+
 On your raspberry server run:
 
 - `sudo apt install syncthing`
