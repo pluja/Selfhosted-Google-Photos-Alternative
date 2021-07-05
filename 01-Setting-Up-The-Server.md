@@ -16,6 +16,10 @@ Start the RPI with the SD and login using the default credentials for your serve
 
 Once logged in, change the password. It should automatically ask you to change it. If not, use `passwd` to change it.
 
+Depending on what OS you chose, you can jump to:
+- [Raspbian config](https://github.com/pluja/Selfhosted-Google-Photos-Alternative/blob/main/01-Setting-Up-The-Server.md#raspbian-config)
+- [Ubuntu config](https://github.com/pluja/Selfhosted-Google-Photos-Alternative/blob/main/01-Setting-Up-The-Server.md#ubuntu-config)
+
 ## Raspbian config
 
 > The `sudo raspi-config` command comes very handy for basic configuration. Use it to enable SSH server and change keyboard layout before proceding.
