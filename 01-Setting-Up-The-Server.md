@@ -86,6 +86,12 @@ Once done, restart the ssh service:
 
 `sudo systemctl reload ssh`
 
+And finally, install a basic firewall protection:
+
+`sudo apt install fail2ban`
+
+You are done with setting up your server. Now you can proceed to the second step of the guide.
+
 ## Ubuntu config
 
 Now we will configure the internet connections for the RPI. We will be setting up the Wi-Fi connection with DHCP4 (will assign an IP dynamically, this is for the first updates and so) and then we will be configuring the Ethernet port with an static IP for when we set up the RPI-4 as a server.
