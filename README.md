@@ -16,6 +16,18 @@ At the end of this tutorial we will have a Photo Storage solution that will allo
 
 This can be achieved using a Raspberry Pi 4 and a HDD Storage drive. Pretty cheap!
 
+The stack we will be using is the following:
+
+- [PiGallery2](https://github.com/bpatrik/pigallery2) - A simple and lightweight gallery with all that you expect. Read only.  
+  - You can also use [PhotoView](https://github.com/photoview/photoview) instead if you want to be able to do the Face Recognition on the Raspberry itself. I personally prefer not to carry this workload on the RPI.
+- [Syncthing](https://syncthing.net/) - A simple, fast, peer-to-peer syncing tool.  
+- [Phockup](https://github.com/ivandokov/phockup) - Script to organize your Photos.  
+- [Czkawka](https://github.com/qarmin/czkawka) - Find duplicates for your photos really fast.
+- [SSHFS](https://github.com/libfuse/sshfs) - Manage remote Gallery folder locally.  
+- [DigiKam](https://www.digikam.org/) - Face Recognition and Metadata management.  
+- rsync - Efficient backup tool.
+- rclone - Rsync for cloud services.
+
 ## The Guide
 
 1. [Setup the server](https://github.com/pluja/simple-selfhosting/blob/main/01-Setting-Up-The-Server.md#setup-rpi4-server)
