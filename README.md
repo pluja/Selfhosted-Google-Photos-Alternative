@@ -30,6 +30,6 @@ The stack we will be using is the following:
 
 ## The Guide
 
-1. [Setup the server](https://github.com/pluja/simple-selfhosting/blob/main/01-Setting-Up-The-Server.md#setup-rpi4-server)
+1. [Set up the server](https://github.com/pluja/simple-selfhosting/blob/main/01-Setting-Up-The-Server.md#setup-rpi4-server)
 2. [Setting up the Google Photos replacement](https://github.com/pluja/simple-selfhosting/blob/main/02-Photo-Storage-Solution.md#replacing-google-photos)
 3. [Outside access: PiVPN](https://github.com/pluja/simple-selfhosting/blob/main/03-PiVPN-Convert-Raspi-Into-VPN.md#convert-your-raspberry-into-a-vpn)
