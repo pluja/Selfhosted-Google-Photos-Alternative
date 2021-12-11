@@ -1,4 +1,4 @@
-# Setup RPI4 server
+# Set up the RPI4 server
 
 Download Ubuntu Server image or Raspbian for Raspberry Pi. It is recommended to get the LTS version.
 
@@ -9,9 +9,9 @@ Raspbian is more lightweight and more suitable for Raspberry.
 
 Burn the image on the SD card using [**Balena Etcher**](https://www.balena.io/etcher/) (or [Rufus](https://rufus.ie/en_US/)).
 
-Insert the SD card to the Raspberry and connect your Raspberry to a power supply so it will boot. You should connect your Raspberry to some kind of display using the HDMI ports for the first configurations (at least until ssh is ready).
+Insert the SD card to the Raspberry and connect your Raspberry to a power supply so it will boot. You should connect your Raspberry to some kind of display using the HDMI ports for the first configurations (at least until SSH is ready).
 
-Once booted, login using the default credentials for your server:
+Once booted, log in using the default credentials for your server:
 
 - User: `ubuntu` Password: `ubuntu` if we are on **Ubuntu Server**.
 - User: `pi` Password: `raspberry` if we are on **Raspbian**.
@@ -26,11 +26,11 @@ Depending on what OS you chose, you can jump to:
 
 > The `sudo raspi-config` command comes very handy for basic configuration. Use it to enable SSH server and change keyboard layout before proceding.
 
-Now we will configure the internet connections for the RPI. We will be setting up the Wi-Fi connection with DHCP4 (will assign an IP dynamically, this is for the first updates and so) and then we will be configuring the Ethernet port with an static IP for when we set up the RPI as a server.
+Now we will configure the internet connections for the RPI. We will be setting up the Wi-Fi connection with DHCP4 (will assign an IP dynamically; this is for the first updates and so) and then we will be configuring the Ethernet port with a static IP for when we set up the RPI as a server.
 
-To setup the WiFi connection use `sudo raspi-config` and search through the menus for the WiFi configuration. There enter the SSID (network name) and Password to connect to your network. Once done, reboot the RPI.
+To setup the WiFi connection use `sudo raspi-config` and search through the menus for the WiFi configuration. There, enter the SSID (network name) and Password to connect to your network. Once done, reboot the RPI.
 
-Now update all packages wiht:
+Now update all packages with:
 `sudo apt-get update && sudo apt-get upgrade`
 
 Now let's configure the static IP for the `eth0` port.
@@ -47,9 +47,9 @@ static routers=192.168.1.1
 static domain_name_servers=192.168.1.1 9.9.9.9
 ```
 
-This way we are assigning the static ip `192.168.1.222` to the raspberry pi `Eth0` port. Also we are using `9.9.9.9` DNS provider (Quad9). You can change this to suit your needs.
+This way we are assigning the static ip `192.168.1.222` to the raspberry pi `eth0` port. Also we are using `9.9.9.9` as the DNS provider (Quad9). You can change this to suit your needs.
 
-Now shutdown the RPI with `shutdown now` and connect the Ethernet cable. Once booted, try to ssh to the RPI-4 with the assigned IP:
+Now shut down the RPI with `shutdown now` and connect the Ethernet cable. Once booted, try to SSH to the RPI-4 with the assigned IP:
 
 `ssh pi@192.168.1.222`
 
@@ -67,7 +67,7 @@ Now you can try to `ssh` again to the RPI and see that you are no longer prompte
 
 `ssh pi@192.168.1.222`
 
-> NOTE: make sure to backup your ssh keys (`$HOME/.ssh/` directory)
+> NOTE: make sure to back up your ssh keys (`$HOME/.ssh/` directory)
 
 Now we will edit the SSH config to make it more secure:
 
@@ -82,7 +82,7 @@ UsePAM no
 PermitRootLogin no
 ```
 
-Once done, restart the ssh service:
+Once done, restart the SSH service:
 
 `sudo systemctl reload ssh`
 
@@ -94,7 +94,7 @@ You are done with setting up your server. Now you can proceed to the second step
 
 ## Ubuntu config
 
-Now we will configure the internet connections for the RPI. We will be setting up the Wi-Fi connection with DHCP4 (will assign an IP dynamically, this is for the first updates and so) and then we will be configuring the Ethernet port with an static IP for when we set up the RPI-4 as a server.
+Now we will configure the internet connections for the RPI. We will be setting up the Wi-Fi connection with DHCP4 (will assign an IP dynamically; this is for the first updates and so) and then we will be configuring the Ethernet port with a static IP for when we set up the RPI-4 as a server.
 
 To do so we will need to edit the file `50-cloud-init.yaml`
 
@@ -122,11 +122,11 @@ network:
             dhcp4: true
 ```
 
-Now we will save using `Esc` and then the command `:wq` to exit and save Vim. Make sure to change anything that is between `<>` to suit your network. Also check that the `gateway4` (router) is the same for your network. And assign the IP of your choice, with this config the RPI4 IP will be `192.168.1.221`.
+Now we will save using `ESC` and then the command `:wq` to exit and save Vim. Make sure to change anything that is between `<>` to suit your network. Also check that the `gateway4` (router) is the same for your network. And assign the IP of your choice: with this config the RPI-4 IP will be `192.168.1.221`.
 
 Once done, apply this config with `sudo netplan apply`.
 
-Now we will configure SSH so we can control the RPI from another computer and we will also deactivate the password and root login for SSH for security.
+Now we will configure SSH so we can control the RPI from another computer; and we will also deactivate the password and root login for SSH for security.
 
 To generate a private+public key pair on *NIX systems, launch this command on the local machine (not RPI):
 
