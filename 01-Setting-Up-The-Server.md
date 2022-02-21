@@ -90,6 +90,18 @@ And finally, install a basic firewall protection:
 
 `sudo apt install fail2ban`
 
+Fail2ban will ban the IPs that try to intrude your system, it will ban them after 5 tries with an exponentially increasing time ban.
+
+Activate Fail2Ban:
+
+`sudo systemctl start fail2ban && sudo systemctl enable fail2ban`
+
+If you want to check the jailed IPs use:
+
+`fail2ban-client status`
+
+It is recommended to further configure it (with this guide)[https://linuxhandbook.com/fail2ban-basic/] if you wish to learn more about fail2ban.
+
 You are done with setting up your server. Now you can proceed to the second step of the guide.
 
 ## Ubuntu config
@@ -160,5 +172,17 @@ Once done, restart the ssh service:
 And finally, install a basic firewall protection:
 
 `sudo apt install fail2ban`
+
+Fail2ban will ban the IPs that try to intrude your system, it will ban them after 5 tries with an exponentially increasing time ban.
+
+Activate Fail2Ban:
+
+`sudo systemctl start fail2ban && sudo systemctl enable fail2ban`
+
+If you want to check the jailed IPs use:
+
+`fail2ban-client status`
+
+It is recommended to further configure it (with this guide)[https://linuxhandbook.com/fail2ban-basic/] if you wish to learn more about fail2ban.
 
 You are done with setting up your server. Now you can proceed to the second step of the guide.
