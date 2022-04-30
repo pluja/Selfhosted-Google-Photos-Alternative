@@ -57,7 +57,7 @@ Once you have `ssh` to the RPI, you can proceed to secure the SSH configuration.
 
 To generate a private+public key pair on *NIX systems, launch this command on the local machine (your workstation, not RPI):
 
-`ssh-keygen -t rsa`
+`ssh-keygen -t ed25519 -C "raspberrypi" `
 
 You can use the default folder destination for the keys. Then you will need to copy the generated keys to the remote machine (RPI):
 
@@ -142,7 +142,7 @@ Now we will configure SSH so we can control the RPI from another computer; and w
 
 To generate a private+public key pair on *NIX systems, launch this command on the local machine (not RPI):
 
-`ssh-keygen -t rsa`
+`ssh-keygen -t ed25519 -C "raspberrypi" `
 
 You can use the default folder destination for the keys. Then you will need to copy the generated keys to the remote machine (RPI):
 
