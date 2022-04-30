@@ -51,21 +51,21 @@ This way we are assigning the static ip `192.168.1.222` to the raspberry pi `eth
 
 Now shut down the RPI with `shutdown now` and connect the Ethernet cable. Once booted, try to SSH to the RPI-4 with the assigned IP:
 
-`ssh pi@192.168.1.222`
+`ssh username@ip`
 
 Once you have `ssh` to the RPI, you can proceed to secure the SSH configuration. To do so we will deactivate the password and root login for SSH for security.
 
-To generate a private+public key pair on *NIX systems, launch this command on the local machine (your workstation, not RPI):
+To generate a private+public key pair on * NIX systems, launch this command on the local machine (your workstation, not the server):
 
-`ssh-keygen -t ed25519 -C "raspberrypi" `
+`ssh-keygen -t ed25519 -C "comment" `
 
-You can use the default folder destination for the keys. Then you will need to copy the generated keys to the remote machine (RPI):
+You need to specify the path for the keys when you choose the keys filename. You can use the default folder destination for the keys. Then you will need to copy the generated keys to the remote machine (RPI):
 
-`ssh-copy-id -i $HOME/.ssh/id_rsa.pub pi@192.168.1.222`
+`ssh-copy-id -i $HOME/.ssh/keyname.pub username@ip`
 
-Now you can try to `ssh` again to the RPI and see that you are no longer prompted for a password:
+Now you can try to `ssh` again to the server and see that you are no longer prompted for a password:
 
-`ssh pi@192.168.1.222`
+`ssh username@server`
 
 > NOTE: make sure to back up your ssh keys (`$HOME/.ssh/` directory)
 
@@ -73,7 +73,7 @@ Now we will edit the SSH config to make it more secure:
 
 `sudo nano /etc/ssh/sshd_config`
 
-You will need to find the following variables and set the values to the ones you can see here:
+You will need to find the following variables and set the values to the ones you can see here. This will disable the root login and the password prompt. You will **only** be able to login to your server via SSH with a pair of valid keys.
 
 ```
 ChallengeResponseAuthentication no
@@ -100,7 +100,7 @@ If you want to check the jailed IPs use:
 
 `fail2ban-client status`
 
-It is recommended to further configure it (with this guide)[https://linuxhandbook.com/fail2ban-basic/] if you wish to learn more about fail2ban.
+It is recommended to further configure it [with this guide](https://linuxhandbook.com/fail2ban-basic/) if you wish to learn more about fail2ban.
 
 You are done with setting up your server. Now you can proceed to the second step of the guide.
 
